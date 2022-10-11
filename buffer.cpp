@@ -1,5 +1,7 @@
 #include "buffer.h"
 #include <iostream>
+#include <string>
+#include <vector>
 
 EditorBuffer::EditorBuffer()
 {
