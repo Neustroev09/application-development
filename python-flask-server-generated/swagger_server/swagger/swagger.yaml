@@ -1,0 +1,201 @@
+openapi: 3.0.0
+info:
+  title: Информационная система издательства
+  description: Реализация REST-API
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com//hw2/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: https://localhost:8080/
+  description: Dev Server
+paths:
+  /allApplications:
+    get:
+      tags:
+      - Applications
+      summary: Метод получение всех заявок на издательство
+      operationId: get_all_applications
+      responses:
+        "200":
+          description: Успешный ответ со списком всех заявок на издательство
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Application'
+                x-content-type: application/json
+        "400":
+          description: Ошибка при получении всех заявок
+      x-openapi-router-controller: swagger_server.controllers.applications_controller
+    post:
+      tags:
+      - Applications
+      summary: Метод создания заявки на издательство
+      operationId: create_application
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Application'
+        required: true
+      responses:
+        "200":
+          description: Успешный ответ с созданной заявкой на издательство
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+        "400":
+          description: Ошибка при создании заявки
+      x-openapi-router-controller: swagger_server.controllers.applications_controller
+  /application/{application_id}:
+    get:
+      tags:
+      - Applications
+      summary: Метод получение заявки на издательство по идентификатору
+      operationId: get_application_by_id
+      parameters:
+      - name: application_id
+        in: path
+        description: Идентификатор заявки на издательство
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      responses:
+        "200":
+          description: Успешный ответ с одной заявкой на издательство
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+        "400":
+          description: Ошибка при получении заявки
+        "404":
+          description: Заявка не найдена
+      x-openapi-router-controller: swagger_server.controllers.applications_controller
+    put:
+      tags:
+      - Applications
+      summary: Метод обновления заявки на издательство по идентификатору
+      operationId: update_application_by_id
+      parameters:
+      - name: application_id
+        in: path
+        description: Идентификатор заявки на издательство
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Application'
+        required: true
+      responses:
+        "200":
+          description: Успешное обновление заявки на издательство
+        "400":
+          description: Ошибка при обновление заявки
+        "404":
+          description: Заявка не найдена
+      x-openapi-router-controller: swagger_server.controllers.applications_controller
+    delete:
+      tags:
+      - Applications
+      summary: Метод удаления заявки на издательство по идентификатору
+      operationId: delete_application_by_id
+      parameters:
+      - name: application_id
+        in: path
+        description: Идентификатор заявки на издательство
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      responses:
+        "200":
+          description: Успешное удаление заявки на издательство
+          content:
+            application/json: {}
+        "400":
+          description: Ошибка при удалении заявки
+        "404":
+          description: Заявка не найдена
+      x-openapi-router-controller: swagger_server.controllers.applications_controller
+components:
+  schemas:
+    Application:
+      required:
+      - applicationDate
+      - bookInformation
+      - fullName
+      - id
+      - phone
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        fullName:
+          type: string
+          example: Neustroev Maxim Andreevich
+        applicationDate:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        phone:
+          type: string
+          example: 922-264-25-41
+        bookInformation:
+          $ref: '#/components/schemas/bookInformation'
+      example:
+        phone: 922-264-25-41
+        fullName: Neustroev Maxim Andreevich
+        bookInformation:
+          numberPages: 544
+          author: Джоан Роулинг
+          genre: Фэнтези
+          title: Гарри Поттер и узник Азкабана
+        id: d290f1ee-6c54-4b01-90e6-d701748f0851
+        applicationDate: 2016-08-29T09:12:33.001Z
+    bookInformation:
+      required:
+      - author
+      - genre
+      - numberPages
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          example: Гарри Поттер и узник Азкабана
+        author:
+          type: string
+          example: Джоан Роулинг
+        genre:
+          type: string
+          example: Фэнтези
+        numberPages:
+          type: integer
+          example: 544
+      example:
+        numberPages: 544
+        author: Джоан Роулинг
+        genre: Фэнтези
+        title: Гарри Поттер и узник Азкабана
+
